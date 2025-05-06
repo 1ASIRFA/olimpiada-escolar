@@ -6,7 +6,6 @@
 
 Este proyecto es una aplicación web desarrollada con **Flask** y **PostgreSQL** como base de datos. Está diseñada para gestionar un evento local dirigido a colegios de educación infantil y primaria, permitiendo la inscripción de centros escolares, gestión de actividades y organización del evento de manera centralizada y sencilla.
 
-![VistaPrevia](Logoapli.png)
 
 ## 🎯 Objetivo del Proyecto
 
