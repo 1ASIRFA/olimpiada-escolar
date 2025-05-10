@@ -10,9 +10,7 @@ create user OLIMPI identified by oli
 grant create session, create table, create procedure, create trigger to OLIMPI;
 grant create public synonym, create sequence, create view to OLIMPI;
 
-connect OLIMPI/oli@10.1.3.156 -- MV Álvaro
-
--- connect OLIMPI/oli@
+connect OLIMPI/oli@delfos
 
 -- CREACIÓN DE TABLAS.
 
