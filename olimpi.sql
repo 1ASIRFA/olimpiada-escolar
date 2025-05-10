@@ -14,12 +14,6 @@ connect OLIMPI/oli@10.1.3.156 -- MV Álvaro
 
 -- connect OLIMPI/oli@
 
-
-
-
-
-
-
 -- CREACIÓN DE TABLAS.
 
 CREATE TABLE EQUIPOS(
@@ -27,6 +21,8 @@ CREATE TABLE EQUIPOS(
     oliEqu char(1) not null 
         constraint ck_oliEqu check (oliEqu in ('S', 'N'))
 );
+
+COMMENT ON COLUMN EQUIPOS.oliEqu IS 'Equipo olímpico.';
 
 CREATE TABLE PARTICIPANTES(
     idPar number primary key,
@@ -38,6 +34,10 @@ CREATE TABLE PARTICIPANTES(
     corPar varchar2(100) not null
 );
 
+COMMENT ON COLUMN PARTICIPANTES.neaePar IS 'El participante necesita atención especial personalizada.';
+COMMENT ON COLUMN PARTICIPANTES.curPar IS '3a, 4a y 5a para participantes de educación infantil. 1p, 2p, 3p, 4p, 5p y 6p para participantes en educación primaria';
+COMMENT ON COLUMN PARTICIPANTES.corPar IS 'Correo electrónico asociado al participante (puede ser de su padre, madre o tutor legal).';
+
 CREATE TABLE ENCUENTROS(
     idEnc number primary key,
     estEnc char(1) not null
@@ -45,10 +45,10 @@ CREATE TABLE ENCUENTROS(
     finiEnc date not null,
     ffinEnc date not null,
     idPis number not null,
-    idDis nu mber not null
+    idDis number not null
 );
 
-COMMENT ON COLUMN ENCUENTROS.estEnc IS 'D: Disponible, E: En camino, O: Ocupado';
+COMMENT ON COLUMN ENCUENTROS.estEnc IS 'Estados: D: Disponible, E: En camino y O: Ocupado.';
 
 CREATE TABLE PISTAS(
     idPis number primary key,
@@ -58,6 +58,8 @@ CREATE TABLE PISTAS(
        constraint ck_cubPis check (cubPis in ('S', 'N'))
 );
 
+COMMENT ON COLUMN PISTAS.cubPis IS 'Posibilidad de pista cubierta.';
+
 CREATE TABLE DISCIPLINAS(
     idDis number primary key,
     nomDis varchar2(50) not null
@@ -65,33 +67,23 @@ CREATE TABLE DISCIPLINAS(
 
 CREATE TABLE CATEGORIAS(
     idCat number primary key,
-    nomCat varchar2(50)
-    -- Posible tabla que relacione CICLO con Categoria.
+    nomCat varchar2(50) not null
 );
-
 
 CREATE TABLE VOLUNTARIOS(
     idVol number primary key,
-    nomVol varchar2(50) not null
-    -- Va a arbitrar??
+    nomVol varchar2(50) not null,
+    arbVol char(1) not null
+        constraint ck_arbVol check(arbVol in ('S', 'N'))
 );
+
+COMMENT ON COLUMN VOLUNTARIOS.arbVol IS 'El voluntario arbitrará el encuentro. Sólo será posible si no hay árbitro asociado al encuentro.';
 
 CREATE TABLE ARBITROS(
     idArb number primary key,
     nomArb varchar2(50) not null
 );
 
-
--- Hasta aquí, todas las entidades simples.
-
-
-
-
-
-
-
-
--- Tablas puente para las relaciones.
 
 CREATE TABLE PARTIDOS(
     idEnc number not null,
@@ -107,8 +99,8 @@ CREATE TABLE PLANTILLAS(
 
 CREATE TABLE DIVISIONES(
     idDis number not null,
-    idCic number not null,
-    primary key (idDis, idCic)
+    idCat number not null,
+    primary key (idDis, idCat)
 );
 
 CREATE TABLE STAFF(
@@ -122,8 +114,12 @@ CREATE TABLE COLEGIADOS(
     idDis number not null,
     primary key (idArb, idDis)
 );
-
  
+-- ALTER CK PARTICIPANTES
+
+ALTER TABLE PARTICIPANTES 
+ADD CONSTRAINT ck_corPar 
+    CHECK (corPar LIKE '%@%.%');
 
 -- ALTER FK ENCUENTROS
 
@@ -141,13 +137,17 @@ ALTER TABLE ENCUENTROS
 ADD CONSTRAINT ck_fecEnc 
     CHECK (ffinEnc > finiEnc);
 
+-- UNIQUE DISCIPLINAS
+
+ALTER TABLE DISCIPLINAS 
+ADD CONSTRAINT uk_nomDis 
+    UNIQUE(nomDis);
 
 -- ALTER FK PISTAS
 
 ALTER TABLE PISTAS
 ADD CONSTRAINT fk_pisPad 
     FOREIGN KEY (idPisPadre) REFERENCES PISTAS(idPis);
-
 
 -- ALTER FK PARTIDO
 
@@ -159,7 +159,6 @@ ALTER TABLE PARTIDOS
 ADD CONSTRAINT fk_par_equ 
     FOREIGN KEY (idEqu) REFERENCES EQUIPOS(idEqu);
 
-
 -- ALTER FK PLANTILLA
 
 ALTER TABLE PLANTILLAS
@@ -170,7 +169,6 @@ ALTER TABLE PLANTILLAS
 ADD CONSTRAINT fk_pla_par
     FOREIGN KEY (idPar) REFERENCES PARTICIPANTES(idPar);
 
-
 -- ALTER FK DIVISION 
 
 ALTER TABLE DIVISIONES
@@ -178,9 +176,8 @@ ADD CONSTRAINT fk_div_dis
     FOREIGN KEY (idDis) REFERENCES DISCIPLINAS(idDis);
 
 ALTER TABLE DIVISIONES
-ADD CONSTRAINT fk_div_cic 
-    FOREIGN KEY (idCic) REFERENCES CICLOS(idCic);
-
+ADD CONSTRAINT fk_div_cat 
+    FOREIGN KEY (idCat) REFERENCES CATEGORIAS(idCat);
 
 -- ALTER FK STAFF
 
@@ -191,7 +188,6 @@ ADD CONSTRAINT fk_sta_vol
 ALTER TABLE STAFF
 ADD CONSTRAINT fk_sta_dis 
     FOREIGN KEY (idDis) REFERENCES DISCIPLINAS(idDis);
-
 
 -- ALTER FK COLEGIADO
 
