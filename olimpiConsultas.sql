@@ -50,5 +50,3 @@ FROM PISTA P
 JOIN ENCUENTRO E ON P.idEnc = E.idEnc
 JOIN DISCIPLINA D ON E.idEnc = D.idEnc
 WHERE D.nomDis = 'Fútbol';
-
-
