@@ -75,7 +75,7 @@ INSERT INTO PARTICIPANTES (idPar, curPar, cenPar, nomPar, neaePar, corPar) VALUE
 
 -- Benjamín (3p-4p)
 INSERT INTO PARTICIPANTES (idPar, curPar, cenPar, nomPar, neaePar, corPar) VALUES 
-(5, '3p', 'La Inmaculada', 'Sofía Martín', 'N', 'sofia@tutor.com'),
+(5, '3p', 'La Inmaculada', 'Sofía Martín', 'N', 'sofia@tutor.com');
 
 INSERT INTO PARTICIPANTES (idPar, curPar, cenPar, nomPar, neaePar, corPar) VALUES
 (6, '4p', 'La Inmaculada', 'Pedro Gómez', 'N', 'pedro@tutor.com');
