@@ -1,6 +1,6 @@
 # Olimpiapp
 
-![VistaPrevia](olimpiLogo.png)
+![VistaPrevia](09_Varios/olimpiLogo.png)
 
 # 🏫 Plataforma Web para Evento Escolar - Flask + PostgreSQL
 
